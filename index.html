@@ -6,8 +6,30 @@
   <meta charset="utf-8">
   
   
-  <script>try{if(localStorage.get("__framer_force_showing_editorbar_since")){const n=document.createElement("link");n.rel = "modulepreload";n.href="https://framer.com/edit/init.mjs";document.head.appendChild(n)}}catch(e){} if (history.scrollRestoration) {
-    history.scrollRestoration = 'manual';
+  <script>try{if(localStorage.get("__framer_force_showing_editorbar_since")){const n=document.createElement("link");n.rel = "modulepreload";n.href="https://framer.com/edit/init.mjs";document.head.appendChild(n)}}catch(e){} <script>
+    // 1. Force manual scroll restoration
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    }
+
+    // 2. Handle the refresh/load logic
+    window.addEventListener('DOMContentLoaded', () => {
+        const blind = document.getElementById('framer-blind-loader');
+        
+        // Immediately snap to top before the blind opens
+        window.scrollTo(0, 0);
+
+        // Trigger the blind animation
+        if (blind) {
+            blind.classList.add('blind-animate');
+        }
+    });
+
+    // Extra safety: ensure we are at top on a hard refresh
+    window.onbeforeunload = function() {
+        window.scrollTo(0, 0);
+    };
+</script>
 }</script>
   <!-- Start of headStart -->
     
@@ -33,6 +55,33 @@
     <meta name="twitter:image" content="https://framerusercontent.com/images/vuChqNlyr4rlVma9qvgaCHZQGAk.png">
   
   <style data-framer-font-css>/* latin-ext */
+    /* The Blind Overlay */
+#framer-blind-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1a1a1a; /* Match your brand's dark theme */
+    z-index: 99999;
+    transform: translateY(-100%); /* Start hidden above */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+/* The animation class we will trigger via JS */
+.blind-animate {
+    animation: blindSequence 2.2s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+}
+
+@keyframes blindSequence {
+    0% { transform: translateY(-100%); } /* Slide Down starts */
+    30% { transform: translateY(0%); }    /* Fully covered */
+    70% { transform: translateY(0%); }    /* Pause briefly */
+    100% { transform: translateY(-100%); } /* Reveal page */
+}
 @font-face {
   font-family: 'Blinker';
   font-style: normal;
@@ -576,6 +625,9 @@
     <!-- End of headEnd -->
 </head>
 <body>
+  <div id="framer-blind-loader">
+    <h1 style="color: white; font-family: 'Viaoda Libre', serif;">MO</h1>
+  </div>
   <script async src="https://events.framer.com/script?v=2" data-fid="b979d1dae8b34c4935a22ff71aa0f66896b22e1668a61c46a01d49b3c2fecfa2" data-no-nt></script>
   <!-- Start of bodyStart -->
     
